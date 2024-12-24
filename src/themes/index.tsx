@@ -153,7 +153,19 @@ export default function ThemeCustomization({ children }: Props) {
 
   const themes: Theme = createTheme(themeOptions);
   themes.components = useMemo(
-    () => componentStyleOverrides(themes, borderRadius, outlinedFilled),
+    () => ({
+      ...componentStyleOverrides(themes, borderRadius, outlinedFilled),
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            "& input:-webkit-autofill": {
+              WebkitBoxShadow: "0 0 0px 1000px white inset !important", // Remove fundo do preenchimento automático
+              WebkitTextFillColor: themes.palette.text.primary + " !important", // Define a cor do texto
+            },
+          },
+        },
+      },
+    }),
     [themes, borderRadius, outlinedFilled]
   );
 

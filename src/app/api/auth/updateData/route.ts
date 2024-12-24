@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     // Faz a requisição para o backend com o token no cabeçalho
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/v1/update/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/update/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

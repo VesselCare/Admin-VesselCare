@@ -10,9 +10,6 @@ export const schemaLicense = z.object({
   space_quantity: z.string().min(1, { message: "space_quantity_is_required" }),
   license_cost: z.string().min(1, { message: "license_cost_is_required" }),
   type_cloud: z.string().min(1, { message: "type_cloud_is_required" }),
-  status_register: z
-    .string()
-    .min(1, { message: "status_register_is_required" }),
 });
 
 export const license_type = [
@@ -55,8 +52,8 @@ export const allowed_quantity = [
     value: "unlimited",
   },
   {
-    label: "Limited (1 to 100)",
-    value: "limited_1_to_100",
+    label: "Limited (1 to 1000)",
+    value: "limited_1_to_1000",
   },
 ];
 

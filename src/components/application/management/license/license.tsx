@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid2";
 import ButtonBasicComponent from "@/components/ui-components/button/animation-button";
 import SelectBasicComponent from "@/components/ui-components/inputs/Select-basic-component";
 import StandardBasicComponent from "@/components/ui-components/inputs/Standard-basic-component";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import Box from "@mui/material/Box";
 import {
   allowed_quantity,
@@ -17,11 +17,17 @@ import {
 } from "./schemaLicense";
 import { z } from "zod";
 import StandardBasicDateComponent from "@/components/ui-components/inputs/Standard-basic-Date-component";
+import { useEffect } from "react";
+import useLicense from "./useLicense";
 
 // Tipo para filtrar os dados
-type LicenseData = z.infer<typeof schemaLicense>;
+export type LicenseData = z.infer<typeof schemaLicense>;
 
-const LicenseDataBasic = () => {
+const LicenseDataBasic = ({
+  onFormChange,
+}: {
+  onFormChange: (dirty: boolean) => void;
+}) => {
   const methods = useForm<LicenseData>({
     resolver: zodResolver(schemaLicense),
     defaultValues: {
@@ -33,13 +39,31 @@ const LicenseDataBasic = () => {
       space_quantity: "",
       license_cost: "",
       type_cloud: "",
-      status_register: "",
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("New Company", data);
-    alert(JSON.stringify(data));
+  const { createLicenseMutation, isPending } = useLicense();
+
+  // Observar alterações no formulário
+  const watchAllFields = useWatch({ control: methods.control });
+
+  // Verificar se o formulário foi alterado
+  useEffect(() => {
+    const isDirty = Object.values(watchAllFields).some((value) => !!value);
+    onFormChange(isDirty);
+  }, [watchAllFields, onFormChange]);
+
+  // Enviar os dados para o servidor
+  const onSubmit = (data: LicenseData) => {
+    const newData = {
+      ...data,
+      license_cost: Number(data.license_cost),
+    };
+    try {
+      createLicenseMutation(newData);
+    } catch (error) {
+      console.error("Erro ao criar licença:", error);
+    }
   };
 
   return (
@@ -118,7 +142,7 @@ const LicenseDataBasic = () => {
                 type="submit"
                 title="submit_button"
                 position="right"
-                disabled={!methods.formState.isValid}
+                loading={isPending}
               />
             </Box>
           </Grid>

@@ -23,7 +23,7 @@ const useNewProfile = () => {
 
   const { data, isLoading, error } = useQuery<string[]>({
     queryKey: ["roles"],
-    queryFn: () => fetchWithAuth("api/v1/permissions/roles", { method: "GET" }),
+    queryFn: () => fetchWithAuth("/permissions/roles", { method: "GET" }),
   });
 
   // Mapeia os dados para o formato esperado pelo SelectBasicComponent
@@ -41,7 +41,7 @@ const useNewProfile = () => {
   } = useMutation({
     mutationFn: async (formData: FormData) => {
       // Realiza a requisição com o FormData para incluir o avatar e os demais campos
-      return fetchWithAuth("api/v1/users/register", {
+      return fetchWithAuth("/users/register", {
         method: "POST",
         body: formData,
       });

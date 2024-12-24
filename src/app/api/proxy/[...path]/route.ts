@@ -159,28 +159,41 @@ async function handleProxy(req: NextRequest, path: string[], method: string) {
 // Exportar funções para cada método HTTP
 export async function GET(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: { path: string[] } }
 ) {
-  return handleProxy(req, params.path, "GET");
+  const params = await context.params;
+  const resolvedPath = params.path;
+
+  // Use o caminho resolvido
+  return handleProxy(req, resolvedPath, "GET");
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: { path: string[] } }
 ) {
-  return handleProxy(req, params.path, "POST");
+  const params = await context.params;
+  const resolvedPath = params.path;
+
+  return handleProxy(req, resolvedPath, "POST");
 }
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: { path: string[] } }
 ) {
-  return handleProxy(req, params.path, "PUT");
+  const params = await context.params;
+  const resolvedPath = params.path;
+
+  return handleProxy(req, resolvedPath, "PUT");
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: { path: string[] } }
 ) {
-  return handleProxy(req, params.path, "DELETE");
+  const params = await context.params;
+  const resolvedPath = params.path;
+
+  return handleProxy(req, resolvedPath, "DELETE");
 }

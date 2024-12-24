@@ -198,5 +198,12 @@
   "final_date": "Data de finalização",
   "space_quantity": "Quantidade de espaço",
   "type_cloud": "Tipo de núvem",
-  "status_register": "Estado de registro"
+  "status_register": "Estado de registro",
+  "financial": "Financeiro",
+  "select_a_value": "Selecione um valor",
+  "Unlimited": "Ilimitado",
+  "Limited (1 to 1000)": "Limitado (1 a 1000)",
+  "physical_type": "Pessoa física",
+  "legal_type": "Pessoa jurídica",
+  "select_country": "Selecione um país"
 }

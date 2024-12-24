@@ -8,7 +8,7 @@ const usePermissions = () => {
 
   const { data, isLoading, error } = useQuery<PermissionsInterface>({
     queryKey: ["permissions"],
-    queryFn: () => fetchWithAuth("api/v1/permissions", { method: "GET" }),
+    queryFn: () => fetchWithAuth("/permissions", { method: "GET" }),
   });
 
   // Criar o mutation para salvar as permissões
@@ -18,7 +18,7 @@ const usePermissions = () => {
     error: savePermissionsError,
   } = useMutation({
     mutationFn: (permissions: UpdatedPermission[]) =>
-      fetchWithAuth("api/v1/permissions/create-or-update", {
+      fetchWithAuth("/permissions/create-or-update", {
         method: "POST",
         body: JSON.stringify(permissions),
       }),

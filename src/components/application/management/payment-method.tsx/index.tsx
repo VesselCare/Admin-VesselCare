@@ -1,7 +1,9 @@
-import PaymentMethodBasic from './payment-method';
+import PaymentMethodBasic from "./payment-method";
 
-
-export default function PaymentMethod() {
- 
-  return <PaymentMethodBasic />;
+export default function PaymentMethod({
+  onFormChange,
+}: {
+  onFormChange: (dirty: boolean) => void;
+}) {
+  return <PaymentMethodBasic onFormChange={onFormChange} />;
 }

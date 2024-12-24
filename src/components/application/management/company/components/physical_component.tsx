@@ -1,117 +1,111 @@
-import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import StandardBasicComponent from "@/components/ui-components/inputs/Standard-basic-component";
-import { useFormContext } from "react-hook-form";
-import { FormattedMessage } from "react-intl";
-import AddressCompanyComponent from "./andress";
+import Box from "@mui/material/Box";
+import StandardBasicSemControlComponent from "@/components/ui-components/inputs/Standard-basic-sem-control";
+import { useForm } from "react-hook-form";
+import ButtonBasicComponent from "@/components/ui-components/button/animation-button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { schemaPhysical, StatusEnum } from "../schemaCompany";
+import { z } from "zod";
+import SelectBasicComponentSemControl from "@/components/ui-components/inputs/Select-basic_sem_control";
 
-// Componente para campos ACH
-const PhysicalComponent = () => {
-  const { control } = useFormContext();
+export type PhysicalType = z.infer<typeof schemaPhysical>;
+
+const PhysicalComponent = ({ select_type }: { select_type: string }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PhysicalType>({
+    resolver: zodResolver(schemaPhysical),
+    defaultValues: {
+      legal: {
+        name: "",
+        document_id: "",
+        document_type: "",
+        phone: "",
+        email: "",
+        status_enum: "",
+      },
+    },
+  });
+
+  const onSubmit = (data: PhysicalType) => {
+    alert(`Dados enviados: ${select_type}`);
+    alert(`Dados enviados: ${JSON.stringify(data)}`);
+  };
 
   return (
-    <Grid
-      container
-      spacing={2}
-      columns={{ xs: 12, sm: 12, md: 12 }}
-      rowSpacing={10}
-      columnSpacing={5}
-    >
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.legal_business_name"
-          label="legal_business_name"
-          control={control}
-        />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid
+        container
+        spacing={2}
+        columns={{ xs: 12, sm: 12, md: 12 }}
+        rowSpacing={10}
+        columnSpacing={5}
+      >
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+          <StandardBasicSemControlComponent
+            type="text"
+            name="legal.name"
+            label="name"
+            register={register}
+            errors={errors.legal?.name}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+          <StandardBasicSemControlComponent
+            type="text"
+            name="legal.document_id"
+            label="document_id"
+            register={register}
+            errors={errors.legal?.document_id}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+          <StandardBasicSemControlComponent
+            type="text"
+            name="legal.document_type"
+            label="document_type"
+            register={register}
+            errors={errors.legal?.document_type}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+          <StandardBasicSemControlComponent
+            type="text"
+            name="legal.phone"
+            label="phone"
+            register={register}
+            errors={errors.legal?.phone}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+          <StandardBasicSemControlComponent
+            type="email"
+            name="legal.email"
+            label="email"
+            register={register}
+            errors={errors.legal?.email}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+          <SelectBasicComponentSemControl
+            name="legal.status_enum"
+            label="status_enum"
+            data={StatusEnum}
+            register={register}
+            errors={errors.legal?.status_enum}
+          />
+        </Grid>
+        <Box sx={{ mt: 10 }}>
+          <ButtonBasicComponent
+            type="submit"
+            title="submit_button"
+            position="left"
+          />
+        </Box>
       </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.doing_business_as"
-          label="doing_business_as"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.ein"
-          label="ein"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.business_entity_type"
-          label="business_entity_type"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.date_of_incorporation"
-          label="date_of_incorporation"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.business_phone"
-          label="business_phone"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.business_email"
-          label="business_email"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.website_url"
-          label="website_url"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.registered_agent_name"
-          label="registered_agent_name"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.industry"
-          label="industry"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <StandardBasicComponent
-          type="text"
-          name="physical.duns_number"
-          label="duns_number"
-          control={control}
-        />
-      </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 5 }}>
-        <Typography variant="h4">
-          <FormattedMessage id="address" />
-        </Typography>
-      </Grid>
-      <AddressCompanyComponent />
-    </Grid>
+    </form>
   );
 };
 

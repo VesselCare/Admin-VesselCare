@@ -54,7 +54,11 @@ type FilteredData = {
   billet?: { description: string };
 };
 
-const PaymentMethodBasic = () => {
+const PaymentMethodBasic = ({
+  onFormChange,
+}: {
+  onFormChange: (dirty: boolean) => void;
+}) => {
   const [currentSchema, setCurrentSchema] = useState<
     | z.ZodType<any, any, any> // Tipo genérico para os schemas Zod
     | typeof schemaMethodSelection
@@ -63,14 +67,26 @@ const PaymentMethodBasic = () => {
   // Formulário principal
   const methods = useForm({
     resolver: zodResolver(currentSchema as z.ZodType<any, any, any>),
-    defaultValues: { method: "card" },
+    defaultValues: {
+      license_client: "",
+      method: "",
+    },
   });
 
   // Observar o valor do método selecionado
   const selectedMethod = useWatch({
     control: methods.control,
-    name: "method", // Observar o valor do método selecionado
+    name: "method",
   });
+
+  // Observar alterações no formulário
+  const watchAllFields = useWatch({ control: methods.control });
+
+  // Verificar se o formulário foi alterado
+  useEffect(() => {
+    const isDirty = Object.values(watchAllFields).some((value) => !!value);
+    onFormChange(isDirty);
+  }, [watchAllFields, onFormChange]);
 
   // Atualizar o schema com base no método selecionado
   useEffect(() => {

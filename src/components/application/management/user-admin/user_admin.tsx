@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Grid from "@mui/material/Grid2";
 import ButtonBasicComponent from "@/components/ui-components/button/animation-button";
 import StandardBasicComponent from "@/components/ui-components/inputs/Standard-basic-component";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import Box from "@mui/material/Box";
 import { z } from "zod";
 import { schemaUserCompany } from "./schema_user";
@@ -12,11 +12,16 @@ import StandardBasicDateComponent from "@/components/ui-components/inputs/Standa
 import MainCard from "@/components/ui-components/cards/MainCard";
 import SelectBasicComponent from "@/components/ui-components/inputs/Select-basic-component";
 import { CompanyNameVessel } from "../vessel/schemaVessel";
+import { useEffect } from "react";
 
 // Tipo para filtrar os dados
 type LicenseData = z.infer<typeof schemaUserCompany>;
 
-const UserAdminCompany = () => {
+const UserAdminCompany = ({
+  onFormChange,
+}: {
+  onFormChange: (dirty: boolean) => void;
+}) => {
   const methods = useForm<LicenseData>({
     resolver: zodResolver(schemaUserCompany),
     defaultValues: {
@@ -29,6 +34,15 @@ const UserAdminCompany = () => {
       ssn: "",
     },
   });
+
+  // Observar alterações no formulário
+  const watchAllFields = useWatch({ control: methods.control });
+
+  // Verificar se o formulário foi alterado
+  useEffect(() => {
+    const isDirty = Object.values(watchAllFields).some((value) => !!value);
+    onFormChange(isDirty);
+  }, [watchAllFields, onFormChange]);
 
   const onSubmit = (data: any) => {
     console.log("New Company", data);

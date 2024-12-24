@@ -45,7 +45,7 @@ export const JWTProvider = ({ children }: { children: ReactNode }) => {
     const fetchUserData = async () => {
       try {
         // Faz uma requisição para buscar os dados do usuário e roles
-        const response = await fetchWithAuth(`/v1/users/context/${user?.id}`, {
+        const response = await fetchWithAuth(`/users/context/${user?.id}`, {
           method: "GET",
         });
 

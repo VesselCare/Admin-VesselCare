@@ -209,6 +209,12 @@
   "final_date": "Final Date",
   "space_quantity": "Space Quantity",
   "type_cloud": "Type Cloud",
-  "status_register": "Status Register"
+  "status_register": "Status Register",
+  "select_a_value": "Select a value",
+  "Unlimited": "Unlimited",
+  "Limited (1 to 1000)": "Limited (1 to 1000)",
+  "physical_type": "Physical",
+  "legal_type": "Legal",
+  "select_country": "Select Country"
 }
 

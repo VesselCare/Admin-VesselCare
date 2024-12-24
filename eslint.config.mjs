@@ -21,6 +21,8 @@ const eslintConfig = [
       "react/display-name": "off",
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-unused-expressions": "off",
+      "no-unused-vars": "off", // Desativa a regra padrão
+      "unused-imports/no-unused-imports": "error", // Remove importações não usadas
     },
   },
 ];

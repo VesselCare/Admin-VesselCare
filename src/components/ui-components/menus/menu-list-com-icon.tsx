@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, SyntheticEvent } from "react";
+import { SyntheticEvent } from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
@@ -15,6 +15,8 @@ interface MenuListComIconProps {
     icon: React.ReactElement;
     content: React.ReactNode; // Conteúdo associado ao menu
   }[];
+  currentTab: number;
+  handleTabChange: (newTab: number) => void;
 }
 
 // Tabs panel
@@ -34,12 +36,16 @@ function TabPanel({
   );
 }
 
-const MenuListComIcon = ({ listMenu }: MenuListComIconProps) => {
+const MenuListComIcon = ({
+  listMenu,
+  currentTab,
+  handleTabChange,
+}: MenuListComIconProps) => {
   const theme = useTheme();
-  const [value, setValue] = useState<number>(0);
 
+  // A mudança de aba agora é completamente controlada pelo pai
   const handleChange = (event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    handleTabChange(newValue); // Notifica o pai para decidir se a aba pode mudar
   };
 
   return (
@@ -48,7 +54,7 @@ const MenuListComIcon = ({ listMenu }: MenuListComIconProps) => {
         {/* Menu com ícones e texto */}
         <Grid size={{ xs: 12 }}>
           <Tabs
-            value={value}
+            value={currentTab} // Controlado pelo pai
             onChange={handleChange}
             variant="scrollable"
             indicatorColor="primary"
@@ -99,7 +105,7 @@ const MenuListComIcon = ({ listMenu }: MenuListComIconProps) => {
         {/* Conteúdo associado ao menu */}
         <Grid size={{ xs: 12 }}>
           {listMenu.map((item, index) => (
-            <TabPanel key={item.id} value={value} index={index}>
+            <TabPanel key={item.id} value={currentTab} index={index}>
               {item.content}
             </TabPanel>
           ))}

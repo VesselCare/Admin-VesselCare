@@ -11,11 +11,12 @@ interface SelectBasicComponentProps {
   name: string;
   label: string;
   data: { label: string; value: string }[];
-  errors: any;
+  errors?: any;
   isLoading?: boolean;
   error?: string;
   InputLabelProps?: any;
   control?: any;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const SelectBasicComponent = memo(
@@ -28,6 +29,7 @@ const SelectBasicComponent = memo(
     error,
     InputLabelProps,
     control,
+    onChange,
   }: SelectBasicComponentProps) => {
     const theme = useTheme();
 
@@ -44,6 +46,8 @@ const SelectBasicComponent = memo(
                 value={field.value || ""}
                 onChange={(e) => {
                   field.onChange(e);
+                  onChange &&
+                    onChange(e as React.ChangeEvent<HTMLInputElement>);
                 }}
                 fullWidth
                 variant="standard"

@@ -1,10 +1,41 @@
 import Grid from "@mui/material/Grid2";
 import StandardBasicComponent from "@/components/ui-components/inputs/Standard-basic-component";
-import { useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
+
+import { useWatch } from "react-hook-form";
+import { useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// Schema para cada método de pagamento
+const schema = z.object({
+  street: z.string(),
+});
+
+interface AddressCompanyComponentProps {
+  onFormChange: (dirty: boolean) => void;
+}
 
 // Componente para campos ACH
-const AddressCompanyComponent = () => {
-  const { control } = useFormContext();
+const AddressCompanyComponent = ({
+  onFormChange,
+}: AddressCompanyComponentProps) => {
+  // Formulário principal
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      type_client: "",
+    },
+  });
+
+  // Observar alterações no formulário
+  const watchAllFields = useWatch({ control: methods.control });
+
+  // Verificar se o formulário foi alterado
+  useEffect(() => {
+    const isDirty = Object.values(watchAllFields).some((value) => !!value);
+    onFormChange(isDirty);
+  }, [watchAllFields, onFormChange]);
 
   return (
     <Grid
@@ -19,7 +50,7 @@ const AddressCompanyComponent = () => {
           type="text"
           name="street"
           label="street"
-          control={control}
+          control={methods.control}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -27,7 +58,7 @@ const AddressCompanyComponent = () => {
           type="text"
           name="number"
           label="number"
-          control={control}
+          control={methods.control}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -35,7 +66,7 @@ const AddressCompanyComponent = () => {
           type="text"
           name="complement"
           label="complement"
-          control={control}
+          control={methods.control}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -43,7 +74,7 @@ const AddressCompanyComponent = () => {
           type="text"
           name="neighborhood"
           label="neighborhood"
-          control={control}
+          control={methods.control}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -51,7 +82,7 @@ const AddressCompanyComponent = () => {
           type="text"
           name="city"
           label="city"
-          control={control}
+          control={methods.control}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -59,7 +90,7 @@ const AddressCompanyComponent = () => {
           type="text"
           name="state"
           label="state"
-          control={control}
+          control={methods.control}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -67,7 +98,7 @@ const AddressCompanyComponent = () => {
           type="text"
           name="zip_code"
           label="zip_code"
-          control={control}
+          control={methods.control}
         />
       </Grid>
     </Grid>

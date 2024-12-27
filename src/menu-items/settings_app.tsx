@@ -1,13 +1,13 @@
 // assets
 import {
-  IconKey,
-  IconReceipt2,
-  IconBug,
   IconBellRinging,
+  IconBug,
+  IconKey,
   IconPhoneCall,
   IconQuestionMark,
-  IconShieldLock,
+  IconReceipt2,
   IconSettings,
+  IconShieldLock,
 } from "@tabler/icons-react";
 import { FormattedMessage } from "react-intl";
 import { NavItemType } from "../types";
@@ -68,7 +68,7 @@ const pages: NavItemType = {
           id: "system-settings-update",
           title: <FormattedMessage id="system-settings-update" />,
           type: "item",
-          url: "#",
+          url: "/settings/account-settings",
           target: false,
         },
       ],

@@ -27,20 +27,21 @@ import Transitions from "@/components/ui-components/extended/Transitions";
 import { ThemeMode } from "@/types/config";
 
 // assets
-import { IconLogout, IconSettings } from "@tabler/icons-react";
-import useConfig from "@/hooks/useConfig";
-import useAuth from "@/hooks/useAuth";
 import { useLoading } from "@/contexts/LoadingContext";
-
-const User1 = "https://avatars.githubusercontent.com/u/103975942?v=4";
+import useAuth from "@/hooks/useAuth";
+import useConfig from "@/hooks/useConfig";
+import { IconLogout, IconSettings } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
   const theme = useTheme();
   const { borderRadius } = useConfig();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { setIsLoading } = useLoading();
+  const router = useRouter();
+
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
@@ -49,10 +50,10 @@ const ProfileSection = () => {
    * */
   const anchorRef = useRef<any>(null);
 
+  // Logout
   const handleLogout = async () => {
     setIsLoading(true); // Isloading global da aplicação
     try {
-      //console.log('logout');
       logout();
     } catch (err) {
       console.error(err);
@@ -61,6 +62,7 @@ const ProfileSection = () => {
     }
   };
 
+  // Close profile menu
   const handleClose = (
     event: React.MouseEvent<HTMLDivElement> | MouseEvent | TouchEvent
   ) => {
@@ -71,13 +73,17 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
+  // Handle list item click
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement>,
     index: number
   ) => {
     setSelectedIndex(index);
     handleClose(event);
+
   };
+
+  // Toggle profile menu
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -87,7 +93,6 @@ const ProfileSection = () => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
-
     prevOpen.current = open;
   }, [open]);
 
@@ -121,7 +126,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={User1}
+            src={user?.avatar || ""}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: "8px 0 8px 8px !important",
@@ -177,16 +182,13 @@ const ProfileSection = () => {
                           spacing={0.5}
                           alignItems="center"
                         >
-                          <Typography variant="h4">
-                            <FormattedMessage id="good-morning" />,
-                          </Typography>
                           <Typography
                             component="span"
                             variant="h4"
                             sx={{ fontWeight: 400 }}
                           >
                             {/* {user?.name} */}
-                            <FormattedMessage id="welcome" />, Wellington
+                            <FormattedMessage id="welcome" />, {user?.first_name}
                           </Typography>
                         </Stack>
                         <Typography variant="subtitle2">
@@ -216,24 +218,7 @@ const ProfileSection = () => {
                             "& .MuiListItemButton-root": { mt: 0.5 },
                           }}
                         >
-                          <ListItemButton
-                            sx={{ borderRadius: `${borderRadius}px` }}
-                            selected={selectedIndex === 0}
-                            onClick={(
-                              event: React.MouseEvent<HTMLDivElement>
-                            ) => handleListItemClick(event, 0)}
-                          >
-                            <ListItemIcon>
-                              <IconSettings stroke={1.5} size="20px" />
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={
-                                <Typography variant="body2">
-                                  <FormattedMessage id="account-settings" />
-                                </Typography>
-                              }
-                            />
-                          </ListItemButton>
+                          
                           <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             onClick={handleLogout}

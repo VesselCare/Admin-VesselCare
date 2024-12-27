@@ -9,13 +9,13 @@ import InputAdornment from "@mui/material/InputAdornment";
 import OutlinedInput from "@mui/material/OutlinedInput";
 
 // assets
-import { zodResolver } from "@hookform/resolvers/zod";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import AnimateButton from "@/components/ui-components/extended/AnimateButton";
 import LoaderCircular from "@/components/ui-components/LoaderCircular";
 import LoadingScreen from "@/components/ui-components/LoadingScreen";
 import useAuth from "@/hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 // Define o esquema de validação com zod
@@ -99,7 +99,6 @@ const JWTLogin = () => {
             id="outlined-adornment-password-login"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            value="Io[JQqMfTp_!"
             size="small"
             {...register("password")}
             onChange={handleInputChange("password")}

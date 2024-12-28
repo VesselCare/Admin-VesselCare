@@ -24,8 +24,6 @@ export const fetchWithAuth = async (
       credentials: "include", // Garante que os cookies sejam enviados
     });
 
-    console.log("response", response);
-
     // Lidar com status 204 (No Content)
     if (
       response.status === 204 ||
@@ -55,7 +53,6 @@ export const fetchWithAuth = async (
       const errorData = await response.json();
       throw errorData;
     } catch (error) {
-      console.log("error", error);
       throw error;
     }
   } catch (error: any) {

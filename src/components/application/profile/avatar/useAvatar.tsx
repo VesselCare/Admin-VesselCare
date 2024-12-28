@@ -12,8 +12,7 @@ async function handleSendToServer(id: string, payload: any) {
       body: JSON.stringify(payload),
     });
     return response;
-  } catch (error) {
-    console.error("Erro ao enviar imagem ao servidor:", error);
+  } catch (error: any) {
     throw error;
   }
 }
@@ -27,12 +26,10 @@ export const useAvatar = () => {
       handleSendToServer(id, payload),
     onSuccess: (data) => {
       // Exibe um alerta de sucesso ao completar a mutação
-      showAlert({
-        type: "success",
-        title: "success",
-        message: "success_servidor",
-      });
-      console.log("Resposta do servidor:", data);
+      return data;
+    },
+    onError: (error: any) => {
+      return error;
     },
   });
 
@@ -48,6 +45,17 @@ export const useAvatar = () => {
     onClose();
   };
 
+  const handleErrorRemove: any = (error: any) => {
+    showAlert({
+      type: "error",
+      title: "error",
+      message: error.message,
+    },
+    "top-right",
+    5000
+  );
+  };
+
   // Retorna as funções e o estado da mutação
   return {
     updateAvatar: mutation.mutate, // Função para disparar a mutação
@@ -57,5 +65,6 @@ export const useAvatar = () => {
     isError: mutation.isError, // Estado de erro
     error: mutation.error, // Detalhes do erro
     handleSuccessRemove,
+    handleErrorRemove,
   };
 };

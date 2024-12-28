@@ -1,8 +1,11 @@
+import { useAlert } from "@/components/ui-components/alert/alert_suspense";
 import ButtonBasicComponent from "@/components/ui-components/button/animation-button";
 import useAuth from "@/hooks/useAuth";
+import { fetchWithAuth } from "@/services/api";
+import { blobToBase64 } from "@/utils/function_aux";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid2";
@@ -12,11 +15,8 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import ReactCrop, { Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { getCroppedImg } from "./salve_imagem";
 import IconImage from "./iconImage";
-import { fetchWithAuth } from "@/services/api";
-import { blobToBase64 } from "@/utils/function_aux";
-import { useAlert } from "@/components/ui-components/alert/alert_suspense";
+import { getCroppedImg } from "./salve_imagem";
 import { useAvatar } from "./useAvatar";
 
 const Input = styled("input")({
@@ -29,7 +29,7 @@ interface AvatarEditProps {
 
 const AvatarEdit = ({ onClose }: AvatarEditProps) => {
   const { user } = useAuth();
-  const { updateAvatar, isSuccess, handleSuccessRemove } = useAvatar();
+  const { updateAvatar, isSuccess, isError, isLoading,  handleSuccessRemove, handleErrorRemove } = useAvatar();
   const { showAlert } = useAlert();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [showCropper, setShowCropper] = useState(false);
@@ -41,8 +41,6 @@ const AvatarEdit = ({ onClose }: AvatarEditProps) => {
     y: 0,
   });
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
-
-  console.log("avatar", user?.avatar);
 
   // Função para alterar a imagem
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +77,6 @@ const AvatarEdit = ({ onClose }: AvatarEditProps) => {
   // Função para enviar a imagem cortada ao servidor
   const handleSendToServer = async () => {
     if (croppedImage && user?.id) {
-      console.log("Imagem enviada ao servidor:", croppedImage);
 
       try {
         const base64Data = croppedImage.split(",")[1];
@@ -94,13 +91,28 @@ const AvatarEdit = ({ onClose }: AvatarEditProps) => {
         if (isSuccess) {
           onClose();
         }
-      } catch (error) {
-        console.error("Erro ao enviar imagem ao servidor:", error);
+        if (isError) {
+          showAlert({
+            type: "error",
+            title: "error",
+            message: "error_servidor",
+          },
+          "top-right",
+          5000
+        );
+        }
+
+      } catch (error: any) {
+        console.log("error", error.message);
+        console.log("Caiu no catch");
         showAlert({
           type: "error",
           title: "error",
-          message: "error_servidor",
-        });
+          message: error.message,
+        },
+        "top-right",
+        5000
+      );
       }
     }
   };
@@ -130,11 +142,7 @@ const AvatarEdit = ({ onClose }: AvatarEditProps) => {
 
         handleSuccessRemove(onClose);
       } catch (error: any) {
-        showAlert({
-          type: "error",
-          title: "error",
-          message: "error_remover",
-        });
+        handleErrorRemove(error.message);
       }
     }
   };

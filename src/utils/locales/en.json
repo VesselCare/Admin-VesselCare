@@ -215,6 +215,10 @@
   "Limited (1 to 1000)": "Limited (1 to 1000)",
   "physical_type": "Physical",
   "legal_type": "Legal",
-  "select_country": "Select Country"
+  "select_country": "Select Country",
+  "submit-button": "Submit",
+  "remover-button": "Remove",
+  "error": "Error",
+  "error_remover": "Error removing the record"
 }
 

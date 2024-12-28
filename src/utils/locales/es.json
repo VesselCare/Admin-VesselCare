@@ -204,5 +204,9 @@
   "Limited (1 to 1000)": "Limitado (1 a 1000)",
   "physical_type": "Pessoa física",
   "legal_type": "Pessoa jurídica",
-  "select_country": "Seleccione un país"
+  "select_country": "Seleccione un país",
+  "submit-button": "Enviar",
+  "remover-button": "Remover",
+  "error": "Error",
+  "error_remover": "Error al intentar eliminar el registro"
 }

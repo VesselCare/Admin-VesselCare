@@ -7,6 +7,7 @@ export const fetchWithAuth = async (
   try {
     const { body, headers: customHeaders, ...restOptions } = options;
 
+    // Define os headers da requisição
     const headers: Record<string, string> = {
       ...Object.fromEntries(Object.entries(customHeaders || {})),
     };
@@ -23,9 +24,24 @@ export const fetchWithAuth = async (
       credentials: "include", // Garante que os cookies sejam enviados
     });
 
-    // Se a resposta for bem-sucedida (status 2xx), retorne os dados JSON diretamente
+    console.log("response", response);
+
+    // Lidar com status 204 (No Content)
+    if (
+      response.status === 204 ||
+      response.headers.get("Content-Length") === "0"
+    ) {
+      return null; // Retorna null para respostas sem corpo
+    }
+
+    // Verifica se a resposta foi bem-sucedida (status 2xx)
     if (response.ok) {
-      return await response.json();
+      try {
+        return await response.json(); // Tenta parsear o JSON
+      } catch (error) {
+        console.warn("Resposta sem JSON, mas bem-sucedida.");
+        return null; // Retorna null para respostas bem-sucedidas sem JSON
+      }
     }
 
     // Lidar com status 401 (não autenticado)
@@ -35,10 +51,14 @@ export const fetchWithAuth = async (
     }
 
     // Para outros status de erro, extrai a mensagem de erro do JSON e lança uma exceção
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Erro na requisição.");
+    try {
+      const errorData = await response.json();
+      throw errorData;
+    } catch (error) {
+      console.log("error", error);
+      throw error;
+    }
   } catch (error: any) {
-    console.error("Erro na requisição com autenticação:", error);
-    throw new Error(error.message || "Erro desconhecido.");
+    throw error;
   }
 };

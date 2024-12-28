@@ -32,34 +32,33 @@ export const JWTProvider = ({ children }: { children: ReactNode }) => {
     (state: RootState) => state.user
   );
 
-  console.log("user", user);
+  //console.log("user", user);
 
   //Verifica se o usuário está logado ao montar o componente
   useEffect(() => {
-    if (!user?.id) {
-      logout();
-      return;
+    //console.log('fetchUserData', user?.id);
+    if (isLoggedIn && user) {
+      const fetchUserData = async () => {
+        try {
+          // Faz uma requisição para buscar os dados do usuário e roles
+          const response = await fetchWithAuth(`/update/${user?.id}`, {
+            method: "GET",
+          });
+
+          //console.log("response", response);
+
+          dispatch(setUser(response.data.user)); // Define o estado do usuário com os dados retornados
+          dispatch(setDataUser(response.data.role || [])); // Define o estado das permissões (roles)
+          dispatch(setIsLoggedIn(true)); // Define o estado de logi
+        } catch (error) {
+          //console.log('error', error);
+          //console.error("Erro ao buscar dados do usuário:", error);
+          dispatch(logoutAction());
+          router.push("/login");
+        }
+      };
+      fetchUserData();
     }
-
-    // Função para buscar os dados do usuário e roles atualizados sempre que a página é carregada
-    const fetchUserData = async () => {
-      try {
-        // Faz uma requisição para buscar os dados do usuário e roles
-        const response = await fetchWithAuth(`/users/context/${user?.id}`, {
-          method: "GET",
-        });
-
-        dispatch(setUser(response.data.user)); // Define o estado do usuário com os dados retornados
-        dispatch(setDataUser(response.data.role || [])); // Define o estado das permissões (roles)
-        dispatch(setIsLoggedIn(true)); // Define o estado de logi
-      } catch (error) {
-        console.log("error", error);
-        console.error("Erro ao buscar dados do usuário:", error);
-        dispatch(logoutAction());
-        router.push("/login");
-      }
-    };
-    fetchUserData();
   }, []);
 
   // Função para fazer login

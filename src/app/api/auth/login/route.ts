@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       { email, password }
     );
 
-    console.log("response", response);
+    //console.log("response", response);
 
     if (!response.data) {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { token, refreshToken, roleUser } = response.data;
+    const { token, refreshToken, roleUser } = response.data.data;
 
     // Definir os cookies de autenticação
     cookieStore.set("accessToken", token, {

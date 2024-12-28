@@ -13,6 +13,7 @@ import NavigationScroll from "@/layout/NavigationScroll";
 import ThemeCustomization from "@/themes";
 import LoadingScreen from "@/components/ui-components/LoadingScreen";
 import { AbilityProvider } from "@/contexts/AbilityContext";
+import { AlertProvider } from "@/components/ui-components/alert/alert_suspense";
 
 interface Props {
   children: ReactNode;
@@ -36,7 +37,9 @@ export default function ProviderWrapper({ children }: Props) {
                   <ThemeCustomization>
                     <AbilityProvider>
                       <Locales>
-                        <RTLLayout>{children}</RTLLayout>
+                        <AlertProvider>
+                          <RTLLayout>{children}</RTLLayout>
+                        </AlertProvider>
                       </Locales>
                     </AbilityProvider>
                   </ThemeCustomization>

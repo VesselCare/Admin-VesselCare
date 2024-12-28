@@ -5,7 +5,7 @@ type AlertType = "success" | "error" | "warning" | "info";
 
 interface UseAlertReturn {
   showAlert: (
-    type: AlertType,
+    type: "success" | "error" | "warning" | "info",
     title: string,
     message: string,
     buttonText?: string,

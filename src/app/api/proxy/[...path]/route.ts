@@ -20,13 +20,18 @@ async function renewAccessToken(): Promise<boolean> {
       }
     );
 
-    if (response.status === 200) {
+    // Verifica se a resposta foi bem-sucedida e se contém o accessToken
+    if (response.status === 200 && response.data?.accessToken) {
       cookieStore.set("accessToken", response.data.accessToken); // Atualiza o token
       return true;
     }
+
+    // Caso ocorra um erro, retorna false
     return false;
+
+    // Caso ocorra um erro, retorna false
   } catch (error: any) {
-    console.error("Erro ao renovar accessToken:", error);
+    console.error("Erro ao renovar accessToken:", error.message || error);
     return false;
   }
 }
@@ -60,12 +65,14 @@ async function handleProxy(req: NextRequest, path: string[], method: string) {
   // Preparar o corpo da requisição
   let body: any = null;
   if (method !== "GET" && method !== "DELETE") {
+    // Verifica se o corpo da requisição é JSON
     const contentType = req.headers.get("Content-Type") || "";
+
+    // Caso o corpo seja JSON, tenta ler o corpo da requisição
     if (contentType.includes("application/json")) {
       try {
         body = await req.json();
       } catch (error) {
-        console.error("Erro ao ler o corpo JSON da requisição:", error);
         return NextResponse.json(
           { message: "Corpo JSON da requisição inválido." },
           { status: 400 }
@@ -77,7 +84,6 @@ async function handleProxy(req: NextRequest, path: string[], method: string) {
         body = await req.arrayBuffer();
         body = Buffer.from(body);
       } catch (error) {
-        console.error("Erro ao ler o corpo da requisição:", error);
         return NextResponse.json(
           { message: "Erro ao ler o corpo da requisição." },
           { status: 400 }
@@ -90,7 +96,7 @@ async function handleProxy(req: NextRequest, path: string[], method: string) {
   const axiosConfig: AxiosRequestConfig = {
     url: apiUrl,
     method: method as AxiosRequestConfig["method"],
-    headers: headers,
+    headers, //TODO: headers: headers, Mexi aqui.
     data: body,
     withCredentials: true, // Envia cookies automaticamente
   };
@@ -98,7 +104,6 @@ async function handleProxy(req: NextRequest, path: string[], method: string) {
   try {
     // Fazer a requisição para o backend
     const apiResponse: AxiosResponse = await axios(axiosConfig);
-    //console.log(`Resposta do backend (${apiResponse.status}):`, apiResponse.data);
 
     // Retornar a resposta do backend para o cliente
     return NextResponse.json(apiResponse.data, { status: apiResponse.status });
@@ -129,7 +134,7 @@ async function handleProxy(req: NextRequest, path: string[], method: string) {
           } catch (retryError: any) {
             console.error(
               "Erro na segunda tentativa da requisição:",
-              retryError
+              retryError.message || retryError
             );
             return NextResponse.json(
               { message: "Erro na requisição após renovação do token." },
@@ -148,7 +153,9 @@ async function handleProxy(req: NextRequest, path: string[], method: string) {
 
     // Outros erros
     //console.log('error.response', error.response.data);
-    console.error("Erro na requisição proxy:", error);
+    console.error("Erro na requisição proxy:", error.message || error);
+
+    // Retorna o erro para o cliente
     return NextResponse.json(
       { message: error.response.data },
       { status: error.response?.status || 500 }
